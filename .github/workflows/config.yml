@@ -1,0 +1,29 @@
+name: Test
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy configs
+        run: cp .env.example .env
+      - name: Run tests
+        run: docker compose run app-test
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "poetry"
+      - name: Install dependencies
+        run: poetry install
+      - name: Black
+        working-directory: src
+        run: poetry run black --check .
+      - name: MyPy
+        working-directory: src
+        run: poetry run mypy .
