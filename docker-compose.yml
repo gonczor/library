@@ -27,5 +27,7 @@ services:
       - .env
     profiles:
       - dev
+    depends_on:
+      - db
 volumes:
   data:
