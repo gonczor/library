@@ -12,4 +12,4 @@ if __name__ == "__main__":
     from library import db_models
 
     db_models.Base.metadata.create_all(bind=engine)
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)

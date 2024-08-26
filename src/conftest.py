@@ -1,17 +1,17 @@
 from pytest import fixture
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from database import Base, engine, get_db
+from database import Base, engine
 
 
-@fixture(autouse=True, scope="session")
+@fixture(autouse=True, scope="function")
 def db_engine_fixture():
     Base.metadata.create_all(engine)
     yield engine
     Base.metadata.drop_all(engine)
 
 
-@fixture(scope="session")
+@fixture(scope="function")
 def db_session_factory(db_engine_fixture):
     return scoped_session(sessionmaker(bind=db_engine_fixture))
 
