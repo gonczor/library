@@ -1,11 +1,8 @@
 from fastapi import FastAPI
+from library.views import router as library_router
 
 app = FastAPI()
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.include_router(library_router)
 
 
 if __name__ == "__main__":
