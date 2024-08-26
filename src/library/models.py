@@ -1,4 +1,13 @@
+from datetime import datetime
+
 from pydantic import BaseModel, field_validator
+
+
+class BorrowData(BaseModel):
+    id: int
+    borrower_id: str
+    borrowed_at: datetime
+    returned_at: datetime | None
 
 
 class BookData(BaseModel):
@@ -6,9 +15,7 @@ class BookData(BaseModel):
     serial_number: str
     title: str
     author: str
-
-    class Config:
-        orm_mode = True
+    borrows: list[BorrowData]
 
 
 class BookCreateData(BaseModel):
@@ -29,3 +36,18 @@ class BookCreateData(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class BookBorrowData(BaseModel):
+    borrower_id: str
+
+    @field_validator("borrower_id")
+    @classmethod
+    def borrower_id_must_be_6_digit(cls, v: str) -> str:
+        if len(v) != 6:
+            raise ValueError("borrower_id must be a 6-digit number")
+        try:
+            int(v)
+        except ValueError:
+            raise ValueError("borrower_id must be a 6-digit number")
+        return v
